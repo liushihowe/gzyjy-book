@@ -76,6 +76,8 @@ for poll in range(MAX_POLL):
         print(f"[轮询] 第{poll+1}次，等待{POLL_INTERVAL}秒...")
         time.sleep(POLL_INTERVAL)
     
+    # 收集所有可用时段
+    all_available = []
     for dateadd in DATE_ADD_LIST:
         for tp in TIME_PERIOD_LIST:
             resp = session.get(f"{BASE}/Field/GetVenueStateNew", params={
@@ -91,19 +93,23 @@ for poll in range(MAX_POLL):
                     continue
                 if TARGET_TIMES and s["BeginTime"] not in TARGET_TIMES:
                     continue
-                # 同一时间段只选一个场地
-                if s["BeginTime"] in chosen_times:
-                    continue
                 s["_DateAdd"] = dateadd
-                chosen.append(s)
-                chosen_times.add(s["BeginTime"])
-                print(f"[选中] {s['FieldName']} {s['BeginTime']}-{s['EndTime']}")
-                if len(chosen) >= MAX_COUNT:
-                    break
-            if len(chosen) >= MAX_COUNT:
-                break
+                all_available.append(s)
+    
+    # 按 TARGET_TIMES 顺序排序（优先级）
+    if TARGET_TIMES:
+        all_available.sort(key=lambda x: TARGET_TIMES.index(x["BeginTime"]) if x["BeginTime"] in TARGET_TIMES else 999)
+    
+    # 选择场地，同一时间只选一个
+    for s in all_available:
+        if s["BeginTime"] in chosen_times:
+            continue
+        chosen.append(s)
+        chosen_times.add(s["BeginTime"])
+        print(f"[选中] {s['FieldName']} {s['BeginTime']}-{s['EndTime']}")
         if len(chosen) >= MAX_COUNT:
             break
+    
     if len(chosen) >= MAX_COUNT:
         break
 
