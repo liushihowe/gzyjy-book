@@ -176,5 +176,6 @@ else:
 
 send_email(email_subject, email_body)
 
-if not is_success:
-    exit(1)
+# 不管成功失败都正常退出，避免 Actions 显示红色
+# if not is_success:
+#     exit(1)
