@@ -27,8 +27,12 @@ elif os.path.exists("config.json"):
 else:
     cfg = {}
 
-COOKIE = cfg.get("COOKIE", "")
-TARGET_TIMES = cfg.get("TARGET_TIMES", ["13:00", "14:00"])  # 默认下午1-3点
+# 手动输入可覆盖默认配置
+input_cookie = os.environ.get("INPUT_COOKIE", "")
+input_times = os.environ.get("INPUT_TARGET_TIMES", "")
+
+COOKIE = input_cookie if input_cookie else cfg.get("COOKIE", "")
+TARGET_TIMES = input_times.split(",") if input_times else cfg.get("TARGET_TIMES", ["13:00", "14:00"])
 if isinstance(TARGET_TIMES, str):  # 兼容逗号分隔的字符串
     TARGET_TIMES = TARGET_TIMES.split(",") if TARGET_TIMES else []
 

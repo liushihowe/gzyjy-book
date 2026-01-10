@@ -4,9 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       target_times:
-        description: '目标时间段(逗号分隔)，留空默认13:00,14:00,15:00,'
+        description: '目标时间段(逗号分隔)'
         required: false
         default: '13:00,14:00,12:00'
+      cookie:
+        description: 'Cookie(留空用默认secrets)'
+        required: false
+        default: ''
   # 定时触发：周五 7:55 (北京时间) 预约周六
   schedule:
     - cron: '55 23 * * 4'  # UTC 周四 23:55 = 北京 周五 7:55
@@ -23,3 +27,5 @@ jobs:
     - run: python auto_book.py
       env:
         BOOK_CONFIG: ${{ secrets.BOOK_CONFIG }}
+        INPUT_COOKIE: ${{ inputs.cookie }}
+        INPUT_TARGET_TIMES: ${{ inputs.target_times }}
