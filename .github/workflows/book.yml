@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       target_times:
-        description: '目标时间段(逗号分隔)，留空默认13:00,14:00'
+        description: '目标时间段(逗号分隔)，留空默认13:00,14:00,15:00,'
         required: false
-        default: '13:00,14:00'
+        default: '13:00,14:00,15:00,12:00,16:00,17:00'
   # 手动触发，提前一天7:55运行，8:00开放预约
   # schedule:
   #   - cron: '55 23 * * *'  # UTC 23:55 = 北京 7:55
