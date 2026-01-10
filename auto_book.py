@@ -152,8 +152,15 @@ print(f"[结果] {result.text}")
 result_data = json.loads(result.text)
 is_success = str(result_data.get("type")) == "1"
 
-# 发送邮件通知
+# 发送邮件通知 + 控制台摘要
 slots_info = "\n".join([f"  {s['FieldName']} {s['BeginTime']}-{s['EndTime']}" for s in chosen])
+if is_success:
+    print(f"[SUMMARY] success order_id={result_data.get('resultdata')}")
+else:
+    print(f"[SUMMARY] fail reason={result_data.get('message')}")
+for s in chosen:
+    print(f"  dateadd={s.get('_DateAdd','')} {s['FieldName']} {s['BeginTime']}-{s['EndTime']} price={s['FinalPrice']}")
+
 if is_success:
     email_subject = "✅ 体育馆预约成功"
     email_body = f"""预约时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}

@@ -1,9 +1,18 @@
 {
-  "COOKIE": "你的Cookie",
-  "TARGET_TIMES": ["13:00", "14:00"],
+  "COOKIE": "cx_p_token=xxx;JWTUserToken=xxx;UserId=xxx",
+  "VENUE_NO": "02",
+  "FIELD_TYPE_NAME": "广研院羽毛球",
+  "DATE_ADD": "0",
+  "DATE_ADD_LIST": ["0", "1"],
+  "TIME_PERIOD": "0",
+  "TIME_PERIOD_LIST": ["0", "1", "2"],
+  "TARGET_BEGIN_LIST": ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00"],
+  "TARGET_FIELD_NAME": "",
+  "MAX_COUNT": 2,
+  "START_AT": "2026-01-10 08:59:50",
   "SMTP_HOST": "smtp.qq.com",
   "SMTP_PORT": 465,
-  "SMTP_USER": "你的QQ邮箱@qq.com",
-  "SMTP_PASS": "QQ邮箱授权码",
-  "NOTIFY_EMAIL": ""
+  "SMTP_USER": "你的邮箱",
+  "SMTP_PASS": "邮箱授权码",
+  "NOTIFY_EMAIL": "收件邮箱"
 }
