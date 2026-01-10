@@ -1,0 +1,25 @@
+name: 体育馆预约
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_times:
+        description: '目标时间段(逗号分隔)，留空默认13:00,14:00'
+        required: false
+        default: '13:00,14:00'
+  # 手动触发，提前一天7:55运行，8:00开放预约
+  # schedule:
+  #   - cron: '55 23 * * *'  # UTC 23:55 = 北京 7:55
+
+jobs:
+  book:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    - run: pip install requests
+    - run: python auto_book.py
+      env:
+        BOOK_CONFIG: ${{ secrets.BOOK_CONFIG }}

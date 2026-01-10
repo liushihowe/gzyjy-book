@@ -1,0 +1,9 @@
+{
+  "COOKIE": "你的Cookie",
+  "TARGET_TIMES": ["13:00", "14:00"],
+  "SMTP_HOST": "smtp.qq.com",
+  "SMTP_PORT": 465,
+  "SMTP_USER": "你的QQ邮箱@qq.com",
+  "SMTP_PASS": "QQ邮箱授权码",
+  "NOTIFY_EMAIL": ""
+}

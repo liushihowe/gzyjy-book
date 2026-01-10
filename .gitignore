@@ -1,0 +1,7 @@
+# 忽略本地配置（含敏感信息）
+config.json
+
+# 临时文件
+tmp.txt
+*.html
+*.js
