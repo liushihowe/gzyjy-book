@@ -69,6 +69,8 @@ for seg in COOKIE.split(";"):
 
 # ============ 轮询获取可预约时段 ============
 chosen = []
+chosen_times = set()  # 已选的时间段，避免同一时间选多个场地
+
 for poll in range(MAX_POLL):
     if poll > 0:
         print(f"[轮询] 第{poll+1}次，等待{POLL_INTERVAL}秒...")
@@ -89,8 +91,12 @@ for poll in range(MAX_POLL):
                     continue
                 if TARGET_TIMES and s["BeginTime"] not in TARGET_TIMES:
                     continue
+                # 同一时间段只选一个场地
+                if s["BeginTime"] in chosen_times:
+                    continue
                 s["_DateAdd"] = dateadd
                 chosen.append(s)
+                chosen_times.add(s["BeginTime"])
                 print(f"[选中] {s['FieldName']} {s['BeginTime']}-{s['EndTime']}")
                 if len(chosen) >= MAX_COUNT:
                     break
@@ -119,13 +125,33 @@ result = session.post(f"{BASE}/Field/{api}", data={
 }, timeout=10)
 print(f"[结果] {result.text}")
 
+# 解析结果判断是否成功
+result_data = json.loads(result.text)
+is_success = str(result_data.get("type")) == "1"
+
 # 发送邮件通知
 slots_info = "\n".join([f"  {s['FieldName']} {s['BeginTime']}-{s['EndTime']}" for s in chosen])
-email_body = f"""预约时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+if is_success:
+    email_subject = "✅ 体育馆预约成功"
+    email_body = f"""预约时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
 预约场地:
 {slots_info}
 
 接口返回: {result.text}
 """
-send_email("✅ 体育馆预约结果", email_body)
+else:
+    email_subject = "❌ 体育馆预约失败"
+    email_body = f"""预约时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+尝试预约:
+{slots_info}
+
+失败原因: {result_data.get('message', '未知')}
+接口返回: {result.text}
+"""
+
+send_email(email_subject, email_body)
+
+if not is_success:
+    exit(1)
