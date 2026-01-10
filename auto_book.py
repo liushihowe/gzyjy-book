@@ -69,7 +69,7 @@ for seg in COOKIE.split(";"):
 
 # ============ 轮询获取可预约时段 ============
 chosen = []
-chosen_times = set()  # 已选的时间段，避免同一时间选多个场地
+chosen_times = set()  # 已选的时间段
 
 for poll in range(MAX_POLL):
     if poll > 0:
@@ -100,7 +100,7 @@ for poll in range(MAX_POLL):
     if TARGET_TIMES:
         all_available.sort(key=lambda x: TARGET_TIMES.index(x["BeginTime"]) if x["BeginTime"] in TARGET_TIMES else 999)
     
-    # 选择场地，同一时间只选一个
+    # 第一轮：优先选不同时间段
     for s in all_available:
         if s["BeginTime"] in chosen_times:
             continue
@@ -109,6 +109,19 @@ for poll in range(MAX_POLL):
         print(f"[选中] {s['FieldName']} {s['BeginTime']}-{s['EndTime']}")
         if len(chosen) >= MAX_COUNT:
             break
+    
+    # 第二轮：如果不够，允许同一时间段的不同场地
+    if len(chosen) < MAX_COUNT:
+        chosen_fields = {(c["FieldNo"], c["BeginTime"]) for c in chosen}
+        for s in all_available:
+            key = (s["FieldNo"], s["BeginTime"])
+            if key in chosen_fields:
+                continue
+            chosen.append(s)
+            chosen_fields.add(key)
+            print(f"[选中-补充] {s['FieldName']} {s['BeginTime']}-{s['EndTime']}")
+            if len(chosen) >= MAX_COUNT:
+                break
     
     if len(chosen) >= MAX_COUNT:
         break
