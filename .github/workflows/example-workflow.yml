@@ -1,0 +1,14 @@
+# This workflow has been disabled.
+# The actual jobs and steps are commented out to prevent execution.
+# To re-enable, remove comments and set the desired jobs.
+
+# name: Example Workflow
+# on: [push]
+# jobs:
+#   example_job:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v2
+#       - name: Run a script
+#         run: echo "This is a disabled workflow!"
